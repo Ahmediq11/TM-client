@@ -1,6 +1,6 @@
 // src/components/Register.js
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"; // Added Link
 import { registerUser } from "../api/api";
 
 const Register = () => {
@@ -76,3 +76,5 @@ const Register = () => {
     </div>
   );
 };
+
+export default Register;
