@@ -13,7 +13,7 @@ import "./styles/styles.css";
 // Set API base URL for production/development
 window.API_BASE_URL =
   process.env.NODE_ENV === "production"
-    ? "https://your-server-url.vercel.app/api"
+    ? "https://your-server-url.vercel.app/"
     : "http://localhost:3000/api";
 REACT_APP_API_URL;
 const root = ReactDOM.createRoot(document.getElementById("root"));
