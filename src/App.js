@@ -6,14 +6,12 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import {
-  Welcome,
-  Login,
-  Register,
-  Dashboard,
-  PrivateRoute,
-} from "./components";
+import Welcome from "./components/Welcome";
+import Login from "./components/Login";
+import Register from "./components/Register";
+import Dashboard from "./components/Dashboard";
 import { AuthProvider } from "./context/AuthContext";
+import PrivateRoute from "./components/PrivateRoute";
 import "./styles/modern-styles.css";
 import "./styles/style.css";
 import "./styles/styles.css";
