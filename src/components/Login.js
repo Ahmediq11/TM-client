@@ -1,6 +1,6 @@
 // src/components/Login.js
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { loginUser } from "../api/api";
 
@@ -62,3 +62,5 @@ const Login = () => {
     </div>
   );
 };
+
+export default Login;

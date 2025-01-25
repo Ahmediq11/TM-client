@@ -2,10 +2,34 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { getTasks } from "../api/api";
+import TaskForm from "./TaskForm.js";
+import TaskList from "./TaskList.js";
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
   const [tasks, setTasks] = useState([]);
+
+  const handleAddTask = (title) => {
+    const newTask = {
+      id: Date.now(),
+      title,
+      completed: false,
+      createdAt: new Date().toISOString(),
+    };
+    setTasks([newTask, ...tasks]);
+  };
+
+  const handleCompleteTask = (taskId) => {
+    setTasks(
+      tasks.map((task) =>
+        task.id === taskId ? { ...task, completed: !task.completed } : task
+      )
+    );
+  };
+
+  const handleDeleteTask = (taskId) => {
+    setTasks(tasks.filter((task) => task.id !== taskId));
+  };
 
   useEffect(() => {
     const loadTasks = async () => {
@@ -44,7 +68,19 @@ const Dashboard = () => {
                 <span className="badge bg-primary">{tasks.length}/10</span>
               </div>
               <div className="card-body">
-                {/* Task form and lists implementation */}
+                <TaskForm onAddTask={handleAddTask} />
+                <TaskList
+                  tasks={tasks}
+                  onComplete={handleCompleteTask}
+                  onDelete={handleDeleteTask}
+                  type="active"
+                />
+                <TaskList
+                  tasks={tasks}
+                  onComplete={handleCompleteTask}
+                  onDelete={handleDeleteTask}
+                  type="completed"
+                />
               </div>
             </div>
           </div>

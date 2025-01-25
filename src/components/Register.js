@@ -1,6 +1,6 @@
 // src/components/Register.js
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { registerUser } from "../api/api";
 
 const Register = () => {
