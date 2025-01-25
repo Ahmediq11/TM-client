@@ -1,7 +1,8 @@
+// src/components/Welcome.js
 import React from "react";
 import { Link } from "react-router-dom";
 
-function Welcome() {
+const Welcome = () => {
   return (
     <div className="container">
       <div className="welcome-box">
@@ -17,6 +18,6 @@ function Welcome() {
       </div>
     </div>
   );
-}
+};
 
 export default Welcome;
