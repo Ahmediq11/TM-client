@@ -10,10 +10,9 @@ import "./styles/modern-styles.css";
 import "./styles/style.css";
 import "./styles/styles.css";
 
-// Set API base URL for production/development
 window.API_BASE_URL =
   process.env.NODE_ENV === "production"
-    ? "https://your-server-url.vercel.app/api"
+    ? "https://tm-server-kappa.vercel.app/api"
     : "http://localhost:3000/api";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
