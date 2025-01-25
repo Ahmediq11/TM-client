@@ -13,6 +13,7 @@ import {
   Dashboard,
   PrivateRoute,
 } from "./components";
+import { AuthProvider } from "./context/AuthContext";
 import "./styles/modern-styles.css";
 import "./styles/style.css";
 import "./styles/styles.css";

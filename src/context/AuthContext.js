@@ -1,20 +1,11 @@
 // src/context/AuthContext.js
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, { createContext, useState, useContext } from "react";
 
-const AuthContext = createContext(null);
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token"));
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const storedUsername = localStorage.getItem("username");
-    if (storedToken && storedUsername) {
-      setUser({ username: storedUsername });
-      setToken(storedToken);
-    }
-  }, []);
 
   const login = (userData, authToken) => {
     setUser(userData);
