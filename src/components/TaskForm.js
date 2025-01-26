@@ -1,19 +1,57 @@
 // src/components/TaskForm.js
 import React, { useState } from "react";
 
+const MAX_TASK_LENGTH = 100; // Reasonable limit for task title
+
 const TaskForm = ({ onAddTask }) => {
   const [task, setTask] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (task.trim()) {
-      onAddTask(task);
-      setTask("");
+    const trimmedTask = task.trim();
+
+    if (!trimmedTask) {
+      setError("Task cannot be empty");
+      return;
     }
+
+    if (trimmedTask.length > MAX_TASK_LENGTH) {
+      setError(`Task must be less than ${MAX_TASK_LENGTH} characters`);
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      setError("");
+      await onAddTask(trimmedTask);
+      setTask("");
+    } catch (error) {
+      setError(error.message || "Failed to add task");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleChange = (e) => {
+    setTask(e.target.value);
+    if (error) setError("");
   };
 
   return (
     <form onSubmit={handleSubmit} className="mb-4">
+      {error && (
+        <div
+          className="alert alert-danger py-2 px-3 mb-3"
+          style={{
+            fontSize: "0.9rem",
+            borderRadius: "8px",
+          }}
+        >
+          {error}
+        </div>
+      )}
       <div
         style={{
           display: "flex",
@@ -21,14 +59,18 @@ const TaskForm = ({ onAddTask }) => {
           backgroundColor: "var(--background-color)",
           padding: "0.5rem",
           borderRadius: "12px",
-          border: "2px solid var(--primary-color)",
+          border: `2px solid ${
+            error ? "var(--danger-color)" : "var(--primary-color)"
+          }`,
           borderOpacity: "0.1",
+          transition: "all 0.2s ease",
         }}
       >
         <input
           type="text"
           value={task}
-          onChange={(e) => setTask(e.target.value)}
+          onChange={handleChange}
+          maxLength={MAX_TASK_LENGTH}
           required
           placeholder="✍️ Add a new task..."
           style={{
@@ -76,8 +118,16 @@ const TaskForm = ({ onAddTask }) => {
             e.target.style.transform = "translateY(0)";
           }}
         >
-          <span>Add Task</span>
-          <span style={{ fontSize: "1.1rem" }}>+</span>
+          {isSubmitting ? (
+            <div className="spinner-border spinner-border-sm" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          ) : (
+            <>
+              <span>Add Task</span>
+              <span style={{ fontSize: "1.1rem" }}>+</span>
+            </>
+          )}
         </button>
       </div>
     </form>

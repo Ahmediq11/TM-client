@@ -65,32 +65,45 @@ const Dashboard = () => {
 
   const handleCompleteTask = useCallback(
     async (taskId) => {
-      try {
-        const token = localStorage.getItem("token");
-        const task = tasks.find((t) => t._id === taskId);
+      const token = localStorage.getItem("token");
+      const task = tasks.find((t) => t._id === taskId);
+      if (!task) return;
 
+      const newCompletedState = !task.completed;
+      let updatePromise = null;
+
+      try {
         // Optimistic update
         setTasks((prev) =>
           prev.map((t) =>
-            t._id === taskId ? { ...t, completed: !t.completed } : t
+            t._id === taskId ? { ...t, completed: newCompletedState } : t
           )
         );
 
         // Set loading state for this task
         setLoadingStates((prev) => ({ ...prev, [taskId]: true }));
 
-        // Debounced API call
-        await updateTask(taskId, !task.completed, token);
-        await loadTasks(); // Refresh with actual data
+        // Store the promise for the API call
+        updatePromise = updateTask(taskId, newCompletedState, token);
+
+        // Wait for the API call to complete
+        await updatePromise;
+
+        // Only reload tasks if this was the last update for this task
+        if (updatePromise === updateTask(taskId, newCompletedState, token)) {
+          await loadTasks();
+        }
       } catch (error) {
-        // Revert optimistic update on error
-        setTasks((prev) =>
-          prev.map((t) =>
-            t._id === taskId ? { ...t, completed: !t.completed } : t
-          )
-        );
-        setError("Failed to update task. Please try again.");
-        console.error("Error completing task:", error);
+        // Only revert if this was the last update attempt
+        if (updatePromise === updateTask(taskId, newCompletedState, token)) {
+          setTasks((prev) =>
+            prev.map((t) =>
+              t._id === taskId ? { ...t, completed: !newCompletedState } : t
+            )
+          );
+          setError("Failed to update task. Please try again.");
+          console.error("Error completing task:", error);
+        }
       } finally {
         setLoadingStates((prev) => ({ ...prev, [taskId]: false }));
       }
@@ -98,9 +111,11 @@ const Dashboard = () => {
     [tasks, loadTasks]
   );
 
-  // Debounced version of handleCompleteTask
+  // Debounced version of handleCompleteTask with proper cleanup
   const debouncedCompleteTask = useCallback(
-    debounce((taskId) => handleCompleteTask(taskId), 300),
+    debounce((taskId) => {
+      handleCompleteTask(taskId);
+    }, 300),
     [handleCompleteTask]
   );
 
@@ -257,7 +272,8 @@ const Dashboard = () => {
                         fontSize: "0.9rem",
                       }}
                     >
-                      {tasks.length}/10 Tasks
+                      {tasks.filter((t) => !t.completed).length} Active /{" "}
+                      {tasks.length} Total
                     </span>
                   </div>
                 </div>

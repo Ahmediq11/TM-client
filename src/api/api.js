@@ -52,7 +52,18 @@ export const getTasks = async (token) => {
     tasksCache.timestamp &&
     now - tasksCache.timestamp < tasksCache.expiryTime
   ) {
-    return tasksCache.data;
+    try {
+      // Validate cached data structure
+      if (!Array.isArray(tasksCache.data)) {
+        throw new Error("Invalid cache data structure");
+      }
+      return tasksCache.data;
+    } catch (error) {
+      // If cache is invalid, clear it and proceed with fetch
+      console.warn("Cache validation failed:", error);
+      tasksCache.data = null;
+      tasksCache.timestamp = null;
+    }
   }
 
   try {
@@ -63,7 +74,12 @@ export const getTasks = async (token) => {
 
     const data = await handleResponse(response, "Failed to fetch tasks");
 
-    // Update cache
+    // Validate response data before caching
+    if (!Array.isArray(data)) {
+      throw new Error("Invalid response data structure");
+    }
+
+    // Update cache only if data is valid
     tasksCache = {
       data,
       timestamp: now,
@@ -72,32 +88,47 @@ export const getTasks = async (token) => {
 
     return data;
   } catch (error) {
+    // Invalidate cache on error
+    tasksCache.data = null;
+    tasksCache.timestamp = null;
     console.error("Error fetching tasks:", error);
     throw error;
   }
 };
 
 export const addTask = async (title, token) => {
+  if (!title || typeof title !== "string" || !title.trim()) {
+    throw new Error("Invalid task title");
+  }
+
   try {
     const response = await fetch(`${API_BASE_URL}/tasks`, {
       method: "POST",
       headers: defaultHeaders(token),
-      body: JSON.stringify({ title }),
+      body: JSON.stringify({ title: title.trim() }),
     });
 
     const data = await handleResponse(response, "Failed to add task");
 
-    // Invalidate cache
+    // Completely invalidate cache
+    tasksCache.data = null;
     tasksCache.timestamp = null;
 
     return data;
   } catch (error) {
+    // Ensure cache is invalidated on error
+    tasksCache.data = null;
+    tasksCache.timestamp = null;
     console.error("Error adding task:", error);
     throw error;
   }
 };
 
 export const updateTask = async (taskId, completed, token) => {
+  if (!taskId || typeof completed !== "boolean") {
+    throw new Error("Invalid update parameters");
+  }
+
   try {
     const response = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
       method: "PATCH",
@@ -107,17 +138,25 @@ export const updateTask = async (taskId, completed, token) => {
 
     const data = await handleResponse(response, "Failed to update task");
 
-    // Invalidate cache
+    // Completely invalidate cache
+    tasksCache.data = null;
     tasksCache.timestamp = null;
 
     return data;
   } catch (error) {
+    // Ensure cache is invalidated on error
+    tasksCache.data = null;
+    tasksCache.timestamp = null;
     console.error("Error updating task:", error);
     throw error;
   }
 };
 
 export const deleteTask = async (taskId, token) => {
+  if (!taskId) {
+    throw new Error("Invalid task ID");
+  }
+
   try {
     const response = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
       method: "DELETE",
@@ -126,11 +165,15 @@ export const deleteTask = async (taskId, token) => {
 
     const data = await handleResponse(response, "Failed to delete task");
 
-    // Invalidate cache
+    // Completely invalidate cache
+    tasksCache.data = null;
     tasksCache.timestamp = null;
 
     return data;
   } catch (error) {
+    // Ensure cache is invalidated on error
+    tasksCache.data = null;
+    tasksCache.timestamp = null;
     console.error("Error deleting task:", error);
     throw error;
   }
