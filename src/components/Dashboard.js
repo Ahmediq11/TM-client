@@ -36,11 +36,12 @@ const Dashboard = () => {
   }, []);
 
   const handleAddTask = async (title) => {
-    try {
-      const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
+    let tempId;
 
+    try {
       // Optimistic update
-      const tempId = Date.now().toString();
+      tempId = Date.now().toString();
       const optimisticTask = {
         _id: tempId,
         title,
@@ -54,7 +55,9 @@ const Dashboard = () => {
       await loadTasks(); // Refresh with actual data
     } catch (error) {
       // Revert optimistic update on error
-      setTasks((prev) => prev.filter((t) => t._id !== tempId));
+      if (tempId) {
+        setTasks((prev) => prev.filter((t) => t._id !== tempId));
+      }
       setError("Failed to add task. Please try again.");
       console.error("Error adding task:", error);
     }
@@ -102,18 +105,24 @@ const Dashboard = () => {
   );
 
   const handleDeleteTask = async (taskId) => {
-    try {
-      const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
+    // Store the task before deletion
+    const taskToDelete = tasks.find((t) => t._id === taskId);
+    if (!taskToDelete) {
+      setError("Task not found");
+      return;
+    }
+
+    try {
       // Optimistic update
-      const deletedTask = tasks.find((t) => t._id === taskId);
       setTasks((prev) => prev.filter((t) => t._id !== taskId));
 
       // API call
       await deleteTask(taskId, token);
     } catch (error) {
       // Revert optimistic update on error
-      setTasks((prev) => [...prev, deletedTask]);
+      setTasks((prev) => [...prev, taskToDelete]);
       setError("Failed to delete task. Please try again.");
       console.error("Error deleting task:", error);
     }
