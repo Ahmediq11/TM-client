@@ -17,5 +17,8 @@
     }
   ],
   "buildCommand": "npm run build",
-  "outputDirectory": "build"
+  "outputDirectory": "build",
+  "env": {
+    "REACT_APP_API_URL": "https://tm-server-kappa.vercel.app/api"
+  }
 }

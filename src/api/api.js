@@ -1,8 +1,9 @@
 // src/api/api.js
 const API_BASE_URL =
-  process.env.NODE_ENV === "production"
+  process.env.REACT_APP_API_URL ||
+  (process.env.NODE_ENV === "production"
     ? "https://tm-server-kappa.vercel.app/api"
-    : "http://localhost:5000/api";
+    : "http://localhost:5000/api");
 
 export const loginUser = async (username, password) => {
   const response = await fetch(`${API_BASE_URL}/login`, {
