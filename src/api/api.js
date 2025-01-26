@@ -31,3 +31,38 @@ export const getTasks = async (token) => {
   if (!response.ok) throw new Error("Failed to fetch tasks");
   return response.json();
 };
+
+export const addTask = async (title, token) => {
+  const response = await fetch(`${API_BASE_URL}/tasks`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ title }),
+  });
+  if (!response.ok) throw new Error("Failed to add task");
+  return response.json();
+};
+
+export const updateTask = async (taskId, completed, token) => {
+  const response = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ completed }),
+  });
+  if (!response.ok) throw new Error("Failed to update task");
+  return response.json();
+};
+
+export const deleteTask = async (taskId, token) => {
+  const response = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!response.ok) throw new Error("Failed to delete task");
+  return response.json();
+};

@@ -1,7 +1,7 @@
 // src/components/Dashboard.js
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { getTasks } from "../api/api";
+import { getTasks, addTask, updateTask, deleteTask } from "../api/api";
 import TaskForm from "./TaskForm.js";
 import TaskList from "./TaskList.js";
 
@@ -9,26 +9,38 @@ const Dashboard = () => {
   const { user, logout } = useAuth();
   const [tasks, setTasks] = useState([]);
 
-  const handleAddTask = (title) => {
-    const newTask = {
-      id: Date.now(),
-      title,
-      completed: false,
-      createdAt: new Date().toISOString(),
-    };
-    setTasks([newTask, ...tasks]);
+  const handleAddTask = async (title) => {
+    try {
+      const token = localStorage.getItem("token");
+      const result = await addTask(title, token);
+      const tasksData = await getTasks(token); // Refresh tasks from server
+      setTasks(tasksData);
+    } catch (error) {
+      console.error("Error adding task:", error);
+    }
   };
 
-  const handleCompleteTask = (taskId) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === taskId ? { ...task, completed: !task.completed } : task
-      )
-    );
+  const handleCompleteTask = async (taskId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const task = tasks.find((t) => t._id === taskId);
+      await updateTask(taskId, !task.completed, token);
+      const tasksData = await getTasks(token); // Refresh tasks from server
+      setTasks(tasksData);
+    } catch (error) {
+      console.error("Error completing task:", error);
+    }
   };
 
-  const handleDeleteTask = (taskId) => {
-    setTasks(tasks.filter((task) => task.id !== taskId));
+  const handleDeleteTask = async (taskId) => {
+    try {
+      const token = localStorage.getItem("token");
+      await deleteTask(taskId, token);
+      const tasksData = await getTasks(token); // Refresh tasks from server
+      setTasks(tasksData);
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
   };
 
   useEffect(() => {

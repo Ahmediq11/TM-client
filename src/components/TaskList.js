@@ -14,7 +14,7 @@ const TaskList = ({ tasks, onComplete, onDelete, type = "active" }) => {
       <ul className="list-group">
         {filteredTasks.map((task) => (
           <li
-            key={task.id}
+            key={task._id}
             className="list-group-item d-flex justify-content-between align-items-center"
           >
             <div className="d-flex align-items-center">
@@ -22,14 +22,14 @@ const TaskList = ({ tasks, onComplete, onDelete, type = "active" }) => {
                 type="checkbox"
                 className="form-check-input me-2"
                 checked={task.completed}
-                onChange={() => onComplete(task.id)}
+                onChange={() => onComplete(task._id)}
               />
               <span className={task.completed ? "completed" : ""}>
                 {task.title}
               </span>
             </div>
             <button
-              onClick={() => onDelete(task.id)}
+              onClick={() => onDelete(task._id)}
               className="btn btn-danger btn-sm"
             >
               Delete
