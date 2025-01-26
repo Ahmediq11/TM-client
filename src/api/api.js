@@ -24,45 +24,114 @@ export const registerUser = async (username, email, password) => {
   return response.json();
 };
 
-export const getTasks = async (token) => {
-  const response = await fetch(`${API_BASE_URL}/tasks`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  if (!response.ok) throw new Error("Failed to fetch tasks");
+// Cache for tasks with a 30-second expiry
+let tasksCache = {
+  data: null,
+  timestamp: null,
+  expiryTime: 30000, // 30 seconds
+};
+
+const defaultHeaders = (token) => ({
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${token}`,
+});
+
+const handleResponse = async (response, errorMessage) => {
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.message || errorMessage);
+  }
   return response.json();
+};
+
+export const getTasks = async (token) => {
+  // Check cache validity
+  const now = Date.now();
+  if (
+    tasksCache.data &&
+    tasksCache.timestamp &&
+    now - tasksCache.timestamp < tasksCache.expiryTime
+  ) {
+    return tasksCache.data;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/tasks`, {
+      headers: defaultHeaders(token),
+      cache: "no-cache", // Ensure fresh data
+    });
+
+    const data = await handleResponse(response, "Failed to fetch tasks");
+
+    // Update cache
+    tasksCache = {
+      data,
+      timestamp: now,
+      expiryTime: tasksCache.expiryTime,
+    };
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    throw error;
+  }
 };
 
 export const addTask = async (title, token) => {
-  const response = await fetch(`${API_BASE_URL}/tasks`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ title }),
-  });
-  if (!response.ok) throw new Error("Failed to add task");
-  return response.json();
+  try {
+    const response = await fetch(`${API_BASE_URL}/tasks`, {
+      method: "POST",
+      headers: defaultHeaders(token),
+      body: JSON.stringify({ title }),
+    });
+
+    const data = await handleResponse(response, "Failed to add task");
+
+    // Invalidate cache
+    tasksCache.timestamp = null;
+
+    return data;
+  } catch (error) {
+    console.error("Error adding task:", error);
+    throw error;
+  }
 };
 
 export const updateTask = async (taskId, completed, token) => {
-  const response = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ completed }),
-  });
-  if (!response.ok) throw new Error("Failed to update task");
-  return response.json();
+  try {
+    const response = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
+      method: "PATCH",
+      headers: defaultHeaders(token),
+      body: JSON.stringify({ completed }),
+    });
+
+    const data = await handleResponse(response, "Failed to update task");
+
+    // Invalidate cache
+    tasksCache.timestamp = null;
+
+    return data;
+  } catch (error) {
+    console.error("Error updating task:", error);
+    throw error;
+  }
 };
 
 export const deleteTask = async (taskId, token) => {
-  const response = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
-    method: "DELETE",
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  if (!response.ok) throw new Error("Failed to delete task");
-  return response.json();
+  try {
+    const response = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
+      method: "DELETE",
+      headers: defaultHeaders(token),
+    });
+
+    const data = await handleResponse(response, "Failed to delete task");
+
+    // Invalidate cache
+    tasksCache.timestamp = null;
+
+    return data;
+  } catch (error) {
+    console.error("Error deleting task:", error);
+    throw error;
+  }
 };

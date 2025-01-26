@@ -1,5 +1,5 @@
 // src/components/Dashboard.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../context/AuthContext";
 import { getTasks, addTask, updateTask, deleteTask } from "../api/api";
 import TaskForm from "./TaskForm.js";
@@ -8,55 +8,157 @@ import TaskList from "./TaskList.js";
 const Dashboard = () => {
   const { user, logout } = useAuth();
   const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [loadingStates, setLoadingStates] = useState({});
+
+  // Debounce function
+  const debounce = (func, wait) => {
+    let timeout;
+    return (...args) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), wait);
+    };
+  };
+
+  const loadTasks = useCallback(async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const tasksData = await getTasks(token);
+      setTasks(tasksData);
+      setError(null);
+    } catch (error) {
+      setError("Failed to load tasks. Please try again.");
+      console.error("Error loading tasks:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   const handleAddTask = async (title) => {
     try {
       const token = localStorage.getItem("token");
-      const result = await addTask(title, token);
-      const tasksData = await getTasks(token); // Refresh tasks from server
-      setTasks(tasksData);
+
+      // Optimistic update
+      const tempId = Date.now().toString();
+      const optimisticTask = {
+        _id: tempId,
+        title,
+        completed: false,
+        createdAt: new Date().toISOString(),
+      };
+      setTasks((prev) => [optimisticTask, ...prev]);
+
+      // API call
+      await addTask(title, token);
+      await loadTasks(); // Refresh with actual data
     } catch (error) {
+      // Revert optimistic update on error
+      setTasks((prev) => prev.filter((t) => t._id !== tempId));
+      setError("Failed to add task. Please try again.");
       console.error("Error adding task:", error);
     }
   };
 
-  const handleCompleteTask = async (taskId) => {
-    try {
-      const token = localStorage.getItem("token");
-      const task = tasks.find((t) => t._id === taskId);
-      await updateTask(taskId, !task.completed, token);
-      const tasksData = await getTasks(token); // Refresh tasks from server
-      setTasks(tasksData);
-    } catch (error) {
-      console.error("Error completing task:", error);
-    }
-  };
+  const handleCompleteTask = useCallback(
+    async (taskId) => {
+      try {
+        const token = localStorage.getItem("token");
+        const task = tasks.find((t) => t._id === taskId);
+
+        // Optimistic update
+        setTasks((prev) =>
+          prev.map((t) =>
+            t._id === taskId ? { ...t, completed: !t.completed } : t
+          )
+        );
+
+        // Set loading state for this task
+        setLoadingStates((prev) => ({ ...prev, [taskId]: true }));
+
+        // Debounced API call
+        await updateTask(taskId, !task.completed, token);
+        await loadTasks(); // Refresh with actual data
+      } catch (error) {
+        // Revert optimistic update on error
+        setTasks((prev) =>
+          prev.map((t) =>
+            t._id === taskId ? { ...t, completed: !t.completed } : t
+          )
+        );
+        setError("Failed to update task. Please try again.");
+        console.error("Error completing task:", error);
+      } finally {
+        setLoadingStates((prev) => ({ ...prev, [taskId]: false }));
+      }
+    },
+    [tasks, loadTasks]
+  );
+
+  // Debounced version of handleCompleteTask
+  const debouncedCompleteTask = useCallback(
+    debounce((taskId) => handleCompleteTask(taskId), 300),
+    [handleCompleteTask]
+  );
 
   const handleDeleteTask = async (taskId) => {
     try {
       const token = localStorage.getItem("token");
+
+      // Optimistic update
+      const deletedTask = tasks.find((t) => t._id === taskId);
+      setTasks((prev) => prev.filter((t) => t._id !== taskId));
+
+      // API call
       await deleteTask(taskId, token);
-      const tasksData = await getTasks(token); // Refresh tasks from server
-      setTasks(tasksData);
     } catch (error) {
+      // Revert optimistic update on error
+      setTasks((prev) => [...prev, deletedTask]);
+      setError("Failed to delete task. Please try again.");
       console.error("Error deleting task:", error);
     }
   };
 
   useEffect(() => {
-    const loadTasks = async () => {
-      try {
-        const tasksData = await getTasks(localStorage.getItem("token"));
-        setTasks(tasksData);
-      } catch (error) {
-        console.error("Error loading tasks:", error);
-      }
-    };
     loadTasks();
-  }, []);
+  }, [loadTasks]);
+
+  if (loading) {
+    return (
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ minHeight: "100vh" }}
+      >
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
+      {error && (
+        <div
+          className="alert alert-danger alert-dismissible fade show"
+          role="alert"
+          style={{
+            position: "fixed",
+            top: "1rem",
+            right: "1rem",
+            zIndex: 1000,
+            maxWidth: "300px",
+          }}
+        >
+          {error}
+          <button
+            type="button"
+            className="btn-close"
+            onClick={() => setError(null)}
+            aria-label="Close"
+          />
+        </div>
+      )}
       <nav className="navbar">
         <div className="container">
           <div className="d-flex justify-content-between align-items-center w-100">
