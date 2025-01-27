@@ -10,14 +10,17 @@ const Register = () => {
     password: "",
   });
   const navigate = useNavigate();
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
     try {
       await registerUser(formData.username, formData.email, formData.password);
       navigate("/login");
     } catch (error) {
-      alert("Registration failed");
+      console.error("Registration error:", error);
+      setError(error.message || "Registration failed. Please try again.");
     }
   };
 
@@ -26,6 +29,11 @@ const Register = () => {
       <div className="form-container">
         <h2 className="text-center mb-4">Register</h2>
         <form onSubmit={handleSubmit}>
+          {error && (
+            <div className="alert alert-danger" role="alert">
+              {error}
+            </div>
+          )}
           <div className="form-group">
             <label htmlFor="username">Username</label>
             <input

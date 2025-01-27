@@ -9,14 +9,18 @@ const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
 
+  const [error, setError] = useState("");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
     try {
       const data = await loginUser(formData.username, formData.password);
       login({ username: formData.username }, data.token);
       navigate("/dashboard");
     } catch (error) {
-      alert("Login failed");
+      console.error("Login error:", error);
+      setError(error.message || "Login failed. Please check your credentials.");
     }
   };
 
@@ -25,6 +29,11 @@ const Login = () => {
       <div className="form-container">
         <h2 className="text-center mb-4">Login</h2>
         <form onSubmit={handleSubmit}>
+          {error && (
+            <div className="alert alert-danger" role="alert">
+              {error}
+            </div>
+          )}
           <div className="form-group">
             <label htmlFor="username">Username</label>
             <input
