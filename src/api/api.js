@@ -67,6 +67,15 @@ const handleResponse = async (response, errorMessage) => {
   return response.json();
 };
 
+// Add error handling utility
+const handleApiError = (error) => {
+  console.error("API Error:", error);
+  if (error.response?.data?.message) {
+    throw new Error(error.response.data.message);
+  }
+  throw new Error("An unexpected error occurred. Please try again.");
+};
+
 export const getTasks = async (token) => {
   // Check cache validity
   const now = Date.now();
@@ -114,7 +123,6 @@ export const getTasks = async (token) => {
     // Invalidate cache on error
     tasksCache.data = null;
     tasksCache.timestamp = null;
-    console.error("Error fetching tasks:", error);
     throw error;
   }
 };
