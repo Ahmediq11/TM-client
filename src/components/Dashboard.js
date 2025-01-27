@@ -37,11 +37,10 @@ const Dashboard = () => {
 
   const handleAddTask = async (title) => {
     const token = localStorage.getItem("token");
-    let tempId;
+    let tempId = Date.now().toString();
 
     try {
       // Optimistic update
-      tempId = Date.now().toString();
       const optimisticTask = {
         _id: tempId,
         title,
