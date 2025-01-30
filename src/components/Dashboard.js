@@ -233,7 +233,12 @@ const Dashboard = () => {
           <div className="col-md-8 mx-auto">
             <div
               className="card fade-in"
-              style={{ border: "none", borderRadius: "16px", width: "125%" }}
+              style={{
+                border: "none",
+                borderRadius: "16px",
+                width: "125%",
+                marginTop: "15rem",
+              }}
             >
               <div className="card-body p-4">
                 <div className="d-flex justify-content-between align-items-center mb-4">

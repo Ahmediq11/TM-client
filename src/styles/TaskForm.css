@@ -9,7 +9,9 @@
   transition: all 0.2s ease;
   margin-bottom: 1.5rem;
 }
-
+.btn1 {
+  margin: 0px 0px 0px 0px !important;
+}
 .task-input {
   flex: 1;
   padding: 0.625rem 1rem;

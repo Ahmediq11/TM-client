@@ -80,6 +80,7 @@ body {
 }
 
 .btn {
+  margin: 0px 0px 0px 0px !important;
   display: inline-flex;
   align-items: center;
   justify-content: center;

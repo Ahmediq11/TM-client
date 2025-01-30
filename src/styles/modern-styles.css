@@ -40,7 +40,7 @@ body {
 }
 
 .center {
-  margin: 0% 150% 0% 110% !important;
+  margin: 0% 100% 0% 20% !important;
 }
 
 .color {
@@ -132,6 +132,7 @@ input[type="text"] {
 
 /* Button Styles */
 .btn {
+  margin: 0px 0px 0px 0px !important;
   width: 100%;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
@@ -141,6 +142,10 @@ input[type="text"] {
   cursor: pointer;
   transition: all 0.2s ease;
   border: none;
+}
+
+.btn1 {
+  margin: 0px 0px 0px 0px !important;
 }
 
 .btn-primary {
@@ -331,6 +336,7 @@ input[type="text"] {
   .btn {
     width: 100%;
     margin-bottom: 0.5rem;
+    margin: 0px 0px 0px 0px !important;
   }
 }
 

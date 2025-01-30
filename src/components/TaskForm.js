@@ -54,7 +54,7 @@ const TaskForm = ({ onAddTask }) => {
         />
         <button
           type="submit"
-          className="btn btn-primary add-task-btn"
+          className="btn btn-primary add-task-btn "
           disabled={isSubmitting}
         >
           {isSubmitting ? (
