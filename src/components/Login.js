@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { loginUser } from "../api/api";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 
 const Login = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
@@ -23,10 +23,6 @@ const Login = () => {
       console.error("Login error:", error);
       setError(error.message || "Login failed. Please check your credentials.");
     }
-  };
-
-  const togglePassword = () => {
-    setShowPassword(!showPassword);
   };
 
   return (
@@ -67,8 +63,17 @@ const Login = () => {
                 }
                 placeholder="Enter your password"
               />
-              <div className="password-toggle-icon" onClick={togglePassword}>
-                {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+              <div
+                className="password-toggle-icon"
+                onClick={() => setShowPassword(!showPassword)}
+                role="button"
+                tabIndex={0}
+              >
+                {showPassword ? (
+                  <BsEyeSlashFill size={20} />
+                ) : (
+                  <BsEyeFill size={20} />
+                )}
               </div>
             </div>
           </div>

@@ -2,21 +2,30 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { registerUser } from "../api/api";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 
 const Register = () => {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    // Check if passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
     try {
       await registerUser(formData.username, formData.email, formData.password);
       navigate("/login");
@@ -24,10 +33,6 @@ const Register = () => {
       console.error("Registration error:", error);
       setError(error.message || "Registration failed. Please try again.");
     }
-  };
-
-  const togglePassword = () => {
-    setShowPassword(!showPassword);
   };
 
   return (
@@ -82,12 +87,58 @@ const Register = () => {
                 }
                 placeholder="Choose a password"
               />
-              <div className="password-toggle-icon" onClick={togglePassword}>
-                {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+              <div
+                className="password-toggle-icon"
+                onClick={() => setShowPassword(!showPassword)}
+                role="button"
+                tabIndex={0}
+              >
+                {showPassword ? (
+                  <BsEyeSlashFill size={20} />
+                ) : (
+                  <BsEyeFill size={20} />
+                )}
               </div>
             </div>
           </div>
-          <button type="submit" className="btn btn-success">
+          <div className="form-group">
+            <label htmlFor="confirmPassword">Confirm Password</label>
+            <div className="password-input-container">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                className="form-control"
+                id="confirmPassword"
+                required
+                value={formData.confirmPassword}
+                onChange={(e) =>
+                  setFormData({ ...formData, confirmPassword: e.target.value })
+                }
+                placeholder="Confirm your password"
+              />
+              <div
+                className="password-toggle-icon"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                role="button"
+                tabIndex={0}
+              >
+                {showConfirmPassword ? (
+                  <BsEyeSlashFill size={20} />
+                ) : (
+                  <BsEyeFill size={20} />
+                )}
+              </div>
+            </div>
+            {formData.password &&
+              formData.confirmPassword &&
+              formData.password !== formData.confirmPassword && (
+                <small className="text-danger">Passwords do not match</small>
+              )}
+          </div>
+          <button
+            type="submit"
+            className="btn btn-success"
+            disabled={formData.password !== formData.confirmPassword}
+          >
             Register
           </button>
         </form>

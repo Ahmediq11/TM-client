@@ -35,8 +35,8 @@ body {
 /* Container Styles */
 .container {
   padding: 1.5rem;
-  /* max-width: 0px;
-  margin: 0 auto; */
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .center {
@@ -68,6 +68,7 @@ body {
 /* Form Styles */
 .form-group {
   margin-bottom: 1.5rem;
+  position: relative;
 }
 
 .form-group label {
@@ -77,6 +78,35 @@ body {
   font-weight: 500;
 }
 
+/* Password Input Container */
+.password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Password Toggle Icon */
+.password-toggle-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: var(--text-secondary);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  background: none;
+  border: none;
+}
+
+.password-toggle-icon:hover {
+  color: var(--text-primary);
+}
+
+/* Form Control */
 .form-control {
   width: 100%;
   padding: 0.75rem 1rem;
@@ -85,12 +115,19 @@ body {
   background-color: var(--card-background);
   color: var(--text-primary);
   font-size: 1rem;
+  transition: all 0.2s ease;
 }
 
 .form-control:focus {
   border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
   outline: none;
+}
+
+/* Password Input Specific */
+input[type="password"],
+input[type="text"] {
+  padding-right: 2.5rem; /* Make room for the icon */
 }
 
 /* Button Styles */
@@ -101,12 +138,14 @@ body {
   font-weight: 600;
   font-size: 1rem;
   margin-top: 1rem;
-  margin-left: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
 }
 
 .btn-primary {
   background-color: var(--primary-color);
-  border: none;
+  color: white;
 }
 
 .btn-primary:hover {
@@ -114,14 +153,14 @@ body {
   transform: translateY(-1px);
 }
 
-.btn-danger {
-  background-color: var(--danger-color);
-  border: none;
-}
-
 .btn-success {
   background-color: var(--success-color);
-  border: none;
+  color: white;
+}
+
+.btn-success:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 
 /* Navbar Styles */
@@ -280,14 +319,13 @@ body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .container {
-    padding: 1rem;
+  .form-container {
+    margin: 1rem;
+    padding: 1.5rem;
   }
 
-  .form-container,
-  .welcome-box,
-  .card {
-    padding: 1.5rem;
+  .container {
+    padding: 1rem;
   }
 
   .btn {
@@ -306,9 +344,12 @@ body {
   }
 
   .form-control {
-    background-color: #334155;
-    border-color: #475569;
-    color: var(--text-primary);
+    background-color: var(--card-background);
+    border-color: var(--border-color);
+  }
+
+  .form-control:focus {
+    border-color: var(--primary-color);
   }
 
   .list-group-item:hover {
@@ -318,42 +359,46 @@ body {
   }
 }
 
-/* Password Input Styles */
-.password-input-container {
-  position: relative;
-  width: 100%;
-}
-
-.password-toggle-icon {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  padding: 4px;
-}
-
-.password-toggle-icon:hover {
-  color: var(--text-primary);
-}
-
-/* Link Styles */
+/* Text Utilities */
 .text-center {
   text-align: center;
+}
+
+.mb-4 {
+  margin-bottom: 1.5rem;
 }
 
 .mt-3 {
   margin-top: 1rem;
 }
 
+/* Link Styles */
 a {
   color: var(--primary-color);
   text-decoration: none;
+  transition: all 0.2s ease;
 }
 
 a:hover {
   text-decoration: underline;
+  color: var(--primary-hover);
+}
+
+/* Add these styles to your existing CSS */
+
+.text-danger {
+  color: var(--danger-color);
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  display: block;
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.form-group small {
+  margin-top: 0.5rem;
+  display: block;
 }
