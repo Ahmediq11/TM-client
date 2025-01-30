@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { registerUser } from "../api/api";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ const Register = () => {
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const [error, setError] = useState("");
 
@@ -22,6 +24,10 @@ const Register = () => {
       console.error("Registration error:", error);
       setError(error.message || "Registration failed. Please try again.");
     }
+  };
+
+  const togglePassword = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -45,6 +51,7 @@ const Register = () => {
               onChange={(e) =>
                 setFormData({ ...formData, username: e.target.value })
               }
+              placeholder="Choose a username"
             />
           </div>
           <div className="form-group">
@@ -58,22 +65,29 @@ const Register = () => {
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
               }
+              placeholder="Enter your email"
             />
           </div>
           <div className="form-group">
             <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              className="form-control"
-              id="password"
-              required
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-            />
+            <div className="password-input-container">
+              <input
+                type={showPassword ? "text" : "password"}
+                className="form-control"
+                id="password"
+                required
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+                placeholder="Choose a password"
+              />
+              <div className="password-toggle-icon" onClick={togglePassword}>
+                {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+              </div>
+            </div>
           </div>
-          <button type="submit" className="btn btn-success w-100">
+          <button type="submit" className="btn btn-success">
             Register
           </button>
         </form>

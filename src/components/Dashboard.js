@@ -41,22 +41,24 @@ const Dashboard = () => {
       _id: tempId,
       title,
       completed: false,
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
     };
 
     try {
       // Add optimistic task
-      setTasks(currentTasks => [optimisticTask, ...currentTasks]);
+      setTasks((currentTasks) => [optimisticTask, ...currentTasks]);
 
       // Make API call
       const token = localStorage.getItem("token");
       await addTask(title, token);
-      
+
       // Refresh tasks to get actual server data
       await loadTasks();
     } catch (error) {
       // Remove optimistic task on error
-      setTasks(currentTasks => currentTasks.filter(task => task._id !== tempId));
+      setTasks((currentTasks) =>
+        currentTasks.filter((task) => task._id !== tempId)
+      );
       throw error;
     }
   };
@@ -119,17 +121,19 @@ const Dashboard = () => {
 
   const handleDeleteTask = async (taskId) => {
     const token = localStorage.getItem("token");
-    const taskToDelete = tasks.find(task => task._id === taskId);
-    
+    const taskToDelete = tasks.find((task) => task._id === taskId);
+
     try {
       // Optimistic delete
-      setTasks(currentTasks => currentTasks.filter(task => task._id !== taskId));
-      
+      setTasks((currentTasks) =>
+        currentTasks.filter((task) => task._id !== taskId)
+      );
+
       // API call
       await deleteTask(taskId, token);
     } catch (error) {
       // Restore task on error
-      setTasks(currentTasks => [...currentTasks, taskToDelete]);
+      setTasks((currentTasks) => [...currentTasks, taskToDelete]);
       throw error;
     }
   };
@@ -175,16 +179,15 @@ const Dashboard = () => {
         </div>
       )}
       <nav className="navbar">
-        <div className="container">
+        <div className="">
           <div className="d-flex justify-content-between align-items-center w-100">
-            <div className="d-flex align-items-center">
-              <span
-                className="navbar-brand fade-in"
-                style={{ color: "var(--primary-color)", fontWeight: "700" }}
-              >
-                ✨ Task Manager
-              </span>
-            </div>
+            <span
+              className="navbar-brand fade-in center"
+              style={{ color: "var(--primary-color)", fontWeight: "700" }}
+            >
+              ✨ Task Manager
+            </span>
+
             <div className="d-flex align-items-center gap-3">
               <span
                 className="navbar-text slide-in"
@@ -230,7 +233,7 @@ const Dashboard = () => {
           <div className="col-md-8 mx-auto">
             <div
               className="card fade-in"
-              style={{ border: "none", borderRadius: "16px" }}
+              style={{ border: "none", borderRadius: "16px", width: "125%" }}
             >
               <div className="card-body p-4">
                 <div className="d-flex justify-content-between align-items-center mb-4">
@@ -255,9 +258,9 @@ const Dashboard = () => {
                     <span
                       className="badge"
                       style={{
-                        backgroundColor: "var(--primary-color)",
-                        opacity: "0.1",
-                        color: "var(--primary-color)",
+                        backgroundColor: "#2125290a",
+                        // opacity: "0.1",
+                        color: "#6366f1",
                         fontWeight: "600",
                         padding: "0.5rem 1rem",
                         fontSize: "0.9rem",

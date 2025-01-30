@@ -4,26 +4,32 @@
 
 .task-section-title {
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .task-grid {
   display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 }
 
 .task-card {
   background-color: var(--card-background);
-  border-radius: 12px;
-  padding: 1rem;
+  border-radius: 10px;
+  padding: 0.875rem;
   box-shadow: var(--shadow-sm);
   transition: all 0.2s ease;
   border: 1px solid var(--border-color);
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .task-card:hover {
@@ -39,6 +45,8 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+  min-width: 0;
+  flex: 1;
 }
 
 .checkbox-container {
@@ -88,6 +96,11 @@
   flex: 1;
   color: var(--text-primary);
   transition: all 0.2s ease;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+  min-width: 0;
 }
 
 .completed .task-title {

@@ -3,12 +3,13 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { loginUser } from "../api/api";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
-
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
@@ -22,6 +23,10 @@ const Login = () => {
       console.error("Login error:", error);
       setError(error.message || "Login failed. Please check your credentials.");
     }
+  };
+
+  const togglePassword = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -45,22 +50,29 @@ const Login = () => {
               onChange={(e) =>
                 setFormData({ ...formData, username: e.target.value })
               }
+              placeholder="Enter your username"
             />
           </div>
           <div className="form-group">
             <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              className="form-control"
-              id="password"
-              required
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-            />
+            <div className="password-input-container">
+              <input
+                type={showPassword ? "text" : "password"}
+                className="form-control"
+                id="password"
+                required
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+                placeholder="Enter your password"
+              />
+              <div className="password-toggle-icon" onClick={togglePassword}>
+                {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+              </div>
+            </div>
           </div>
-          <button type="submit" className="btn btn-primary w-100">
+          <button type="submit" className="btn btn-primary">
             Login
           </button>
         </form>
