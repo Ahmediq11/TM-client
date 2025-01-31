@@ -11,6 +11,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [loadingStates, setLoadingStates] = useState({});
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   // Debounce function
   const debounce = (func, wait) => {
@@ -142,6 +143,19 @@ const Dashboard = () => {
     loadTasks();
   }, [loadTasks]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isUserMenuOpen && !event.target.closest(".user-menu")) {
+        setIsUserMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [isUserMenuOpen]);
+
   if (loading) {
     return (
       <div
@@ -179,18 +193,71 @@ const Dashboard = () => {
         </div>
       )}
       <nav className="navbar">
-        <div className="">
-          <div className="d-flex justify-content-between align-items-center w-100">
-            <span
-              className="navbar-brand fade-in center"
-              style={{ color: "var(--primary-color)", fontWeight: "700" }}
-            >
-              ✨ Task Manager
-            </span>
+        <div className="container-fluid">
+          <span
+            className="navbar-brand fade-in"
+            style={{ color: "var(--primary-color)", fontWeight: "700" }}
+          >
+            ✨ Task Manager
+          </span>
 
-            <div className="d-flex align-items-center gap-3">
+          {/* Desktop view */}
+          <div className="d-flex align-items-center gap-3">
+            <span
+              className="navbar-text slide-in"
+              style={{ color: "var(--text-primary)" }}
+            >
+              Welcome back,{" "}
               <span
-                className="navbar-text slide-in"
+                style={{ color: "var(--primary-color)", fontWeight: "600" }}
+              >
+                {user?.username}
+              </span>
+            </span>
+            <button
+              onClick={logout}
+              className="btn slide-in"
+              style={{
+                backgroundColor: "var(--background-color)",
+                color: "var(--primary-color)",
+                border: "2px solid var(--primary-color)",
+                padding: "0.5rem 1.5rem",
+                fontWeight: "600",
+                borderRadius: "8px",
+                transition: "all 0.2s ease",
+              }}
+              onMouseOver={(e) => {
+                e.target.style.backgroundColor = "var(--primary-color)";
+                e.target.style.color = "white";
+              }}
+              onMouseOut={(e) => {
+                e.target.style.backgroundColor = "var(--background-color)";
+                e.target.style.color = "var(--primary-color)";
+              }}
+            >
+              Logout
+            </button>
+          </div>
+
+          {/* Mobile view */}
+
+          <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          />
+          <div className="user-menu">
+            <button
+              className="user-menu-icon"
+              onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+              aria-label="User menu"
+            >
+              <i className="fas fa-circle-user"></i>
+            </button>
+            <div
+              className={`user-menu-dropdown ${isUserMenuOpen ? "active" : ""}`}
+            >
+              <span
+                className="navbar-text"
                 style={{ color: "var(--text-primary)" }}
               >
                 Welcome back,{" "}
@@ -200,27 +267,7 @@ const Dashboard = () => {
                   {user?.username}
                 </span>
               </span>
-              <button
-                onClick={logout}
-                className="btn slide-in"
-                style={{
-                  backgroundColor: "var(--background-color)",
-                  color: "var(--primary-color)",
-                  border: "2px solid var(--primary-color)",
-                  padding: "0.5rem 1.5rem",
-                  fontWeight: "600",
-                  borderRadius: "8px",
-                  transition: "all 0.2s ease",
-                }}
-                onMouseOver={(e) => {
-                  e.target.style.backgroundColor = "var(--primary-color)";
-                  e.target.style.color = "white";
-                }}
-                onMouseOut={(e) => {
-                  e.target.style.backgroundColor = "var(--background-color)";
-                  e.target.style.color = "var(--primary-color)";
-                }}
-              >
+              <button onClick={logout} className="btn btn-primary">
                 Logout
               </button>
             </div>
