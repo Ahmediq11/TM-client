@@ -771,7 +771,7 @@ button:disabled {
   .card {
     margin-top: 1rem !important;
     box-shadow: none;
-    padding-left: 4rem !important;
+    padding-left: 6rem !important;
   }
 
   .card-body {
