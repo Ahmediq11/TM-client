@@ -765,70 +765,116 @@ button:disabled {
   }
 }
 
-/* Phone-specific adjustments for TaskForm and TaskList */
+/* Phone-specific adjustments */
 @media (max-width: 480px) {
-  /* TaskForm adjustments */
+  /* Card container adjustments */
+  .card {
+    margin-top: 1rem !important;
+    box-shadow: none;
+    padding-left: 4rem !important;
+  }
+
+  .card-body {
+    padding: 0.75rem !important;
+  }
+
+  /* Task Form */
   .task-form {
     margin: 0.5rem 0;
+    gap: 0.5rem;
   }
 
-  .task-form input {
-    font-size: 0.9rem;
-    padding: 0.6rem;
-    height: 40px;
-  }
-
-  .task-form button {
-    height: 40px;
-    font-size: 0.9rem;
-    padding: 0.4rem 1rem;
-  }
-
-  /* TaskList adjustments */
-  .task-item {
+  .task-form .form-control {
+    height: 38px;
+    font-size: 0.875rem;
     padding: 0.5rem;
-    margin-bottom: 0.4rem;
-    font-size: 0.9rem;
+    border-radius: 6px;
   }
 
-  .task-item .form-check-label {
-    font-size: 0.9rem;
-    margin-left: 0.5rem;
+  .task-form .btn {
+    height: 38px;
+    font-size: 0.875rem;
+    padding: 0 1rem;
+    border-radius: 6px;
+  }
+
+  /* Task List */
+  .task-item {
+    padding: 0.625rem;
+    margin-bottom: 0.5rem;
+    border-radius: 6px;
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+  }
+
+  .task-item .form-check {
+    margin: 0;
+    min-height: auto;
   }
 
   .task-item .form-check-input {
-    width: 1rem;
-    height: 1rem;
-    margin-top: 0.2rem;
+    width: 16px;
+    height: 16px;
+    margin-top: 0.25rem;
+    margin-right: 0.5rem;
+  }
+
+  .task-item .form-check-label {
+    font-size: 0.875rem;
+    line-height: 1.4;
+    margin-left: 0.25rem;
   }
 
   .task-item .btn-delete {
-    padding: 0.3rem;
-    font-size: 0.8rem;
+    padding: 0.25rem;
+    font-size: 0.75rem;
   }
 
-  /* Task sections spacing */
-  .mt-4 {
-    margin-top: 1rem !important;
+  /* Header section */
+  .d-flex.justify-content-between.align-items-center {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 0.5rem;
+  }
+
+  .d-flex.justify-content-between.align-items-center .badge {
+    align-self: flex-start;
+    margin-bottom: 0.5rem;
+  }
+
+  h4 {
+    font-size: 1rem;
+    margin-bottom: 0.25rem !important;
+  }
+
+  p {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem !important;
   }
 
   /* Task counter badge */
   .badge {
     font-size: 0.75rem !important;
-    padding: 0.3rem 0.6rem !important;
+    padding: 0.25rem 0.5rem !important;
+    border-radius: 4px;
   }
 
-  /* Section headers */
+  /* Sections spacing */
+  .mt-4 {
+    margin-top: 0.75rem !important;
+  }
+
   .mb-4 {
     margin-bottom: 0.75rem !important;
   }
 
-  h4 {
-    font-size: 1.1rem;
-    margin-bottom: 0.25rem !important;
+  /* Active/Completed sections */
+  .task-section {
+    margin-bottom: 1rem;
   }
 
-  p {
-    font-size: 0.8rem;
+  .task-section:last-child {
+    margin-bottom: 0;
   }
 }
