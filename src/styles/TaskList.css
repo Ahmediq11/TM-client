@@ -47,6 +47,7 @@
   gap: 1rem;
   min-width: 0;
   flex: 1;
+  width: 28rem !important;
 }
 
 .checkbox-container {
