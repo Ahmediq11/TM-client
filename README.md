@@ -1,70 +1,158 @@
-# Getting Started with Create React App
+# Task Manager - CS50x Final Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Video Demo: [URL to your video demo]
 
-## Available Scripts
+## Description
 
-In the project directory, you can run:
+Task Manager is a modern, responsive web application built with React and Node.js that helps users organize and track their daily tasks efficiently. The application features a clean, intuitive interface with real-time updates and smooth animations.
 
-### `npm start`
+### Key Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- User authentication and secure login
+- Create, read, update, and delete tasks
+- Real-time task status updates
+- Optimistic UI updates for better user experience
+- Responsive design that works on both desktop and mobile devices
+- Dark/Light theme support
+- Error handling and user feedback
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Technologies Used
 
-### `npm test`
+- Frontend:
+  - React.js
+  - Context API for state management
+  - CSS3 with modern animations
+  - Bootstrap for responsive design
+- Backend:
+  - Node.js
+  - Express.js
+  - MongoDB for data storage
+  - JWT for authentication
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Setup and Installation
 
-### `npm run build`
+### Prerequisites
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Node.js (v14 or higher)
+- MongoDB
+- npm or yarn package manager
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Backend Setup
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Clone the repository
 
-### `npm run eject`
+```bash
+git clone [your-repository-url]
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+2. Navigate to the server directory
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+cd server
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+3. Install dependencies
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+npm install
+```
 
-## Learn More
+4. Create a .env file with the following variables
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+PORT=5000
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+5. Start the server
 
-### Code Splitting
+```bash
+npm start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Frontend Setup
 
-### Analyzing the Bundle Size
+1. Navigate to the client directory
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```bash
+cd client
+```
 
-### Making a Progressive Web App
+2. Install dependencies
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```bash
+npm install
+```
 
-### Advanced Configuration
+3. Create a .env file with the following variables
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+```
+REACT_APP_API_URL=http://localhost:5000
+```
 
-### Deployment
+4. Start the development server
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```bash
+npm start
+```
 
-### `npm run build` fails to minify
+## Usage
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. Register a new account or login with existing credentials
+2. Add new tasks using the input field at the top
+3. Mark tasks as complete by clicking the checkbox
+4. Delete tasks using the delete button
+5. View your active and completed tasks in separate sections
+6. Toggle between light and dark themes using the theme switcher
+
+## Project Structure
+
+```
+task-manager/
+├── client/                 # Frontend React application
+│   ├── src/
+│   │   ├── components/    # React components
+│   │   ├── context/      # Context providers
+│   │   ├── api/          # API integration
+│   │   └── styles/       # CSS styles
+│   └── public/           # Static files
+└── server/               # Backend Node.js application
+    ├── controllers/      # Route controllers
+    ├── models/          # Database models
+    ├── routes/          # API routes
+    └── middleware/      # Custom middleware
+```
+
+## Design Choices
+
+- Used React for its component-based architecture and efficient rendering
+- Implemented JWT authentication for secure user sessions
+- Chose MongoDB for its flexibility with document-based storage
+- Implemented optimistic updates for better user experience
+- Used CSS media queries for responsive design
+- Incorporated error handling and loading states for better UX
+
+## Future Improvements
+
+- Task categories and labels
+- Due dates and reminders
+- Task priority levels
+- Collaborative task sharing
+- Data export functionality
+- Push notifications
+
+## About the Developer
+
+This project was created by [Your Name] as a final project for CS50x. It represents the culmination of learning web development concepts and implementing them in a real-world application.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- CS50x teaching staff
+- React documentation
+- MongoDB documentation
+- Bootstrap framework
